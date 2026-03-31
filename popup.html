@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TaskForge</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="task-popup-shell">
+    <main class="task-popup">
+      <section class="task-popup-hero">
+        <div class="task-popup-top">
+          <img src="icon.png" alt="TaskForge" class="brand-logo">
+          <button id="openOptions" type="button" class="icon-button" aria-label="Open settings">
+            <span aria-hidden="true">+</span>
+          </button>
+        </div>
+
+        <p class="eyebrow">TaskForge</p>
+        <h1 class="task-popup-title">Manage your tasks fast.</h1>
+        <p class="task-popup-copy">Create a task, sync both services, and review your current connection status.</p>
+
+        <div class="task-popup-stats">
+          <article class="task-stat">
+            <span class="task-stat-label">Notion</span>
+            <strong id="notionCount" class="task-stat-value">0</strong>
+          </article>
+          <article class="task-stat">
+            <span class="task-stat-label">Google</span>
+            <strong id="googleCount" class="task-stat-value">0</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="task-popup-body">
+        <div class="quick-actions">
+          <button id="syncTasks" type="button" class="outline action-button wide-action">Sync now</button>
+        </div>
+
+        <section class="status-stack">
+          <div id="connectionStatus" class="status-card dark">Checking connections...</div>
+          <div id="mappingStatus" class="status-card dark soft">Loading status...</div>
+        </section>
+
+        <form id="task-form" class="form dark-form compact-form">
+          <label class="field">
+            <span>Title</span>
+            <input id="title" name="title" type="text" placeholder="E.g. Review proposal" required>
+          </label>
+
+          <label class="field">
+            <span>Notes</span>
+            <textarea id="notes" name="notes" rows="3" placeholder="Details or context"></textarea>
+          </label>
+
+          <label class="field">
+            <span>Due date</span>
+            <input id="dueDate" name="dueDate" type="datetime-local">
+          </label>
+
+          <div class="destinations dark-pills">
+            <label class="checkbox dark-check">
+              <input id="sendNotion" type="checkbox" checked>
+              <span>Notion</span>
+            </label>
+            <label class="checkbox dark-check">
+              <input id="sendGoogleTasks" type="checkbox" checked>
+              <span>Google Tasks</span>
+            </label>
+          </div>
+
+          <button id="submitButton" type="submit" class="light-button wide">Create task</button>
+          <section id="message" class="message inset dark-message" aria-live="polite"></section>
+        </form>
+
+        <section class="task-browser dark-browser popup-browser">
+          <div class="tab-bar dark-tabs" role="tablist" aria-label="Task source">
+            <button id="tabNotion" type="button" class="tab-button active" data-target="panelNotion" role="tab" aria-selected="true">Notion</button>
+            <button id="tabGoogle" type="button" class="tab-button" data-target="panelGoogle" role="tab" aria-selected="false">Google Tasks</button>
+          </div>
+
+          <div id="panelNotion" class="tab-panel active" role="tabpanel">
+            <div id="notionTasks" class="task-list compact-list"></div>
+          </div>
+
+          <div id="panelGoogle" class="tab-panel" role="tabpanel" hidden>
+            <div id="googleTasks" class="task-list compact-list"></div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

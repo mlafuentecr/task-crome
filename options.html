@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Settings | TaskForge</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="options-shell">
+    <main class="settings-layout">
+      <section class="settings-header">
+        <p class="eyebrow">TaskForge</p>
+        <h1>Connect the extension to your tools.</h1>
+        <p class="subtitle">Save your Notion settings and authorize Google Tasks.</p>
+        <p class="setup-note">You do not need your Notion or Google password. This extension only uses a Notion integration token and a Google OAuth Client ID.</p>
+        <div class="asset-box">
+          <img src="icon.png" alt="TaskForge icon" class="settings-icon-preview">
+          <div class="asset-copy">
+            <strong>TaskForge icon</strong>
+            <p class="helper-copy">You can open or download the same icon file used by the extension.</p>
+            <div class="link-list compact-links">
+              <a href="icon.png" target="_blank" rel="noreferrer">Open icon</a>
+              <a href="icon.png" download="taskforge-icon.png">Download icon</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <form id="settings-form" class="settings-grid">
+        <section class="card section-card">
+          <h2>Notion</h2>
+          <p class="helper-copy">1. Create an integration. 2. Copy the secret token. 3. Share your database with that integration. 4. Paste the token and database ID here.</p>
+          <div class="link-list">
+            <a href="https://developers.notion.com/docs/create-a-notion-integration" target="_blank" rel="noreferrer">Official Notion guide</a>
+            <a href="https://www.notion.so/profile/integrations" target="_blank" rel="noreferrer">Open Notion integrations</a>
+          </div>
+          <div class="redirect-box">
+            <span class="redirect-label">Database ID example</span>
+            <code>https://www.notion.so/workspace/My-Tasks-<strong>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</strong>?v=...</code>
+            <small class="field-help">Copy the 32-character part shown in bold.</small>
+          </div>
+          <label class="field">
+            <span>Integration token</span>
+            <small class="field-help">This is secret. It is hidden like a password because it works as a credential.</small>
+            <input id="notionToken" name="notionToken" type="password" placeholder="secret_...">
+          </label>
+          <label class="field">
+            <span>Database ID</span>
+            <small class="field-help">This is your Notion database identifier. Open the database as a full page and copy the 32-character ID from the URL. It is not your password.</small>
+            <input id="notionDatabaseId" name="notionDatabaseId" type="text" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+          </label>
+          <label class="field">
+            <span>Title property</span>
+            <input id="notionTitleProperty" name="notionTitleProperty" type="text" placeholder="Name">
+          </label>
+          <label class="field">
+            <span>Notes property</span>
+            <input id="notionNotesProperty" name="notionNotesProperty" type="text" placeholder="Notes">
+          </label>
+          <label class="field">
+            <span>Due date property</span>
+            <input id="notionDueDateProperty" name="notionDueDateProperty" type="text" placeholder="Due">
+          </label>
+          <label class="field">
+            <span>Completed property</span>
+            <input id="notionCompletedProperty" name="notionCompletedProperty" type="text" placeholder="Optional, e.g. Done">
+          </label>
+        </section>
+
+        <section class="card section-card">
+          <h2>Google Tasks</h2>
+          <p class="helper-copy">1. Enable the Google Tasks API in Google Cloud. 2. Create OAuth credentials. 3. Use this extension's redirect URI. 4. Paste only the Client ID here.</p>
+          <div class="link-list">
+            <a href="https://console.cloud.google.com/apis/library/tasks.googleapis.com" target="_blank" rel="noreferrer">Enable Google Tasks API</a>
+            <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noreferrer">Open Google Cloud credentials</a>
+            <a href="https://developers.google.com/workspace/guides/create-credentials" target="_blank" rel="noreferrer">Official Google guide</a>
+          </div>
+          <label class="field">
+            <span>OAuth Client ID</span>
+            <small class="field-help">This is not a password. It is the public identifier for your OAuth client.</small>
+            <input id="googleClientId" name="googleClientId" type="text" placeholder="1234567890-xxxxx.apps.googleusercontent.com">
+          </label>
+          <label class="field">
+            <span>OAuth Client Secret</span>
+            <small class="field-help">Google is currently requiring the Client Secret for this OAuth flow. Copy it from the OAuth client details in Google Cloud.</small>
+            <input id="googleClientSecret" name="googleClientSecret" type="password" placeholder="GOCSPX-...">
+          </label>
+          <label class="field">
+            <span>Task List ID</span>
+            <small class="field-help">Use <code>@default</code> for your main list, or paste another ID if you want a specific list.</small>
+            <input id="googleTaskListId" name="googleTaskListId" type="text" placeholder="@default">
+          </label>
+          <div class="redirect-box">
+            <span class="redirect-label">Redirect URI for Google Cloud</span>
+            <code id="redirectUri">Cargando...</code>
+          </div>
+
+          <div class="button-row">
+            <button id="authorizeGoogle" type="button" class="secondary">Authorize Google</button>
+            <button id="disconnectGoogle" type="button" class="ghost">Sign out</button>
+          </div>
+          <p id="googleStatus" class="inline-status">Google is not authorized yet.</p>
+        </section>
+
+        <section class="card section-card">
+          <h2>Sync</h2>
+          <p class="helper-copy">Automatic mode runs sync in the background. If a conflict appears, you can keep it manual or choose which side should win.</p>
+          <label class="checkbox">
+            <input id="autoSyncEnabled" name="autoSyncEnabled" type="checkbox">
+            <span>Enable automatic sync</span>
+          </label>
+          <label class="field">
+            <span>Interval in minutes</span>
+            <input id="autoSyncMinutes" name="autoSyncMinutes" type="number" min="5" step="5" placeholder="15">
+          </label>
+          <label class="field">
+            <span>Conflict handling</span>
+            <select id="conflictStrategy" name="conflictStrategy">
+              <option value="manual">Manual (do not overwrite)</option>
+              <option value="notion">Prioritize Notion</option>
+              <option value="google">Prioritize Google Tasks</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="card section-card full-width">
+          <div class="button-row">
+            <button type="submit" class="primary">Save settings</button>
+          </div>
+          <div id="settingsMessage" class="message" aria-live="polite"></div>
+        </section>
+
+        <section class="card section-card full-width">
+          <h2>Connection Check</h2>
+          <p class="helper-copy">After saving, the extension will verify your Notion database and Google Tasks setup.</p>
+          <div id="validationSummary" class="message">No validation run yet.</div>
+          <div class="info-grid">
+            <article class="info-tile">
+              <strong>Notion</strong>
+              <p id="notionValidation" class="helper-copy">Waiting for validation.</p>
+            </article>
+            <article class="info-tile">
+              <strong>Google Tasks</strong>
+              <p id="googleValidation" class="helper-copy">Waiting for validation.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="card section-card full-width">
+          <h2>Connection Notes</h2>
+          <p class="helper-copy">Use this section as a quick reminder while setting everything up.</p>
+          <div class="info-grid">
+            <article class="info-tile">
+              <strong>Notion token</strong>
+              <p class="helper-copy">This is secret and should stay private. It belongs in the hidden Integration token field.</p>
+            </article>
+            <article class="info-tile">
+              <strong>Notion Database ID</strong>
+              <p class="helper-copy">Open the database as a full page and copy the 32-character ID from the URL.</p>
+            </article>
+            <article class="info-tile">
+              <strong>Google Client ID</strong>
+              <p class="helper-copy">This is public client metadata, not a password. Paste the Client ID into the OAuth Client ID field.</p>
+            </article>
+            <article class="info-tile">
+              <strong>Google Client Secret</strong>
+              <p class="helper-copy">Copy this from the OAuth client details in Google Cloud. Keep it private and paste it into the hidden Client Secret field.</p>
+            </article>
+            <article class="info-tile">
+              <strong>Redirect URI</strong>
+              <p class="helper-copy">Add the redirect URI shown above into Google Cloud OAuth credentials before authorizing Google.</p>
+            </article>
+          </div>
+        </section>
+      </form>
+    </main>
+
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

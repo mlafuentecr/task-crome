@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TaskForge</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="sidepanel-shell popup-dark">
+    <main class="popup-wide">
+      <section class="wide-hero">
+        <div class="compact-hero-bg"></div>
+        <div class="wide-hero-inner">
+          <div class="compact-brand">
+            <img src="icon.png" alt="TaskForge" class="brand-logo">
+            <button id="openOptions" type="button" class="icon-button dark" aria-label="Open settings">
+              <span aria-hidden="true">+</span>
+            </button>
+          </div>
+
+          <div class="wide-copy">
+            <p class="eyebrow dark">TaskForge</p>
+            <h1 class="compact-title">Connect your tasks in one place.</h1>
+            <p class="compact-subtitle">Create, sync, and review your Notion and Google Tasks setup from a wider dashboard.</p>
+          </div>
+
+          <div class="visual-stats wide-stats">
+            <article class="visual-stat">
+              <span class="visual-label">Notion</span>
+              <strong id="notionCount" class="visual-value">0</strong>
+            </article>
+            <article class="visual-stat">
+              <span class="visual-label">Google</span>
+              <strong id="googleCount" class="visual-value">0</strong>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="wide-main">
+        <section class="wide-column">
+          <div class="quick-actions">
+            <button id="syncTasks" type="button" class="outline action-button wide-action">Sync now</button>
+          </div>
+
+          <section class="status-stack">
+            <div id="connectionStatus" class="status-card dark">Checking connections...</div>
+            <div id="mappingStatus" class="status-card dark soft">Loading status...</div>
+          </section>
+
+          <form id="task-form" class="form dark-form compact-form">
+            <label class="field">
+              <span>Title</span>
+              <input id="title" name="title" type="text" placeholder="E.g. Review proposal" required>
+            </label>
+
+            <label class="field">
+              <span>Notes</span>
+              <textarea id="notes" name="notes" rows="5" placeholder="Details or context"></textarea>
+            </label>
+
+            <div class="wide-form-row">
+              <label class="field">
+                <span>Due date</span>
+                <input id="dueDate" name="dueDate" type="datetime-local">
+              </label>
+
+              <div class="field">
+                <span>Send to</span>
+                <div class="destinations dark-pills">
+                  <label class="checkbox dark-check">
+                    <input id="sendNotion" type="checkbox" checked>
+                    <span>Notion</span>
+                  </label>
+                  <label class="checkbox dark-check">
+                    <input id="sendGoogleTasks" type="checkbox" checked>
+                    <span>Google Tasks</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <button id="submitButton" type="submit" class="light-button wide">Create task</button>
+            <section id="message" class="message inset dark-message" aria-live="polite"></section>
+          </form>
+        </section>
+
+        <section class="wide-column">
+          <section class="task-browser dark-browser wide-browser">
+            <div class="tab-bar dark-tabs" role="tablist" aria-label="Task source">
+              <button id="tabNotion" type="button" class="tab-button active" data-target="panelNotion" role="tab" aria-selected="true">Notion</button>
+              <button id="tabGoogle" type="button" class="tab-button" data-target="panelGoogle" role="tab" aria-selected="false">Google Tasks</button>
+            </div>
+
+            <div id="panelNotion" class="tab-panel active" role="tabpanel">
+              <div id="notionTasks" class="task-list compact-list"></div>
+            </div>
+
+            <div id="panelGoogle" class="tab-panel" role="tabpanel" hidden>
+              <div id="googleTasks" class="task-list compact-list"></div>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
