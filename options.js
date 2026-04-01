@@ -4,9 +4,11 @@ const googleStatus = document.getElementById("googleStatus");
 const authorizeGoogleButton = document.getElementById("authorizeGoogle");
 const disconnectGoogleButton = document.getElementById("disconnectGoogle");
 const redirectUri = document.getElementById("redirectUri");
+const testConnectionButton = document.getElementById("testConnection");
 const validationSummary = document.getElementById("validationSummary");
 const notionValidation = document.getElementById("notionValidation");
 const googleValidation = document.getElementById("googleValidation");
+const inlineConnectionMessages = document.getElementById("inlineConnectionMessages");
 
 const defaultSettings = {
   notionToken: "",
@@ -93,6 +95,11 @@ disconnectGoogleButton.addEventListener("click", async () => {
   }
 });
 
+testConnectionButton.addEventListener("click", async () => {
+  setMessage("", "");
+  await runValidation();
+});
+
 async function initialize() {
   const stored = await chrome.storage.sync.get(defaultSettings);
   redirectUri.textContent = chrome.identity.getRedirectURL("oauth2");
@@ -142,6 +149,7 @@ async function runValidation() {
   validationSummary.className = "message";
   notionValidation.textContent = "Checking Notion...";
   googleValidation.textContent = "Checking Google Tasks...";
+  inlineConnectionMessages.textContent = "Checking Notion and Google Tasks...";
 
   try {
     const response = await chrome.runtime.sendMessage({ type: "validate-connections" });
@@ -152,6 +160,16 @@ async function runValidation() {
     const result = response.result;
     notionValidation.textContent = `${result.notion.label}: ${result.notion.detail}`;
     googleValidation.textContent = `${result.google.label}: ${result.google.detail}`;
+    notionValidation.closest(".info-tile")?.classList.toggle("healthy", result.notion.ok);
+    notionValidation.closest(".info-tile")?.classList.toggle("unhealthy", !result.notion.ok);
+    googleValidation.closest(".info-tile")?.classList.toggle("healthy", result.google.ok);
+    googleValidation.closest(".info-tile")?.classList.toggle("unhealthy", !result.google.ok);
+    inlineConnectionMessages.textContent = [
+      `Notion: ${result.notion.label}. ${result.notion.detail}`,
+      `Google Tasks: ${result.google.label}. ${result.google.detail}`
+    ].join("\n\n");
+    inlineConnectionMessages.parentElement?.classList.toggle("healthy", result.allHealthy);
+    inlineConnectionMessages.parentElement?.classList.toggle("unhealthy", !result.allHealthy);
     validationSummary.textContent = result.allHealthy
       ? "Everything looks connected."
       : `Checked at ${new Intl.DateTimeFormat("en", { dateStyle: "short", timeStyle: "short" }).format(new Date(result.checkedAt))}. Review the notes below.`;
@@ -161,5 +179,12 @@ async function runValidation() {
     validationSummary.className = "message error";
     notionValidation.textContent = "Validation could not be completed.";
     googleValidation.textContent = "Validation could not be completed.";
+    inlineConnectionMessages.textContent = error.message;
+    notionValidation.closest(".info-tile")?.classList.remove("healthy");
+    googleValidation.closest(".info-tile")?.classList.remove("healthy");
+    notionValidation.closest(".info-tile")?.classList.add("unhealthy");
+    googleValidation.closest(".info-tile")?.classList.add("unhealthy");
+    inlineConnectionMessages.parentElement?.classList.remove("healthy");
+    inlineConnectionMessages.parentElement?.classList.add("unhealthy");
   }
 }

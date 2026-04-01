@@ -39,6 +39,11 @@
             <code>https://www.notion.so/workspace/My-Tasks-<strong>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</strong>?v=...</code>
             <small class="field-help">Copy the 32-character part shown in bold.</small>
           </div>
+          <div class="redirect-box">
+            <span class="redirect-label">Real example from your workspace</span>
+            <code>https://www.notion.so/mariolafuente/<strong>3347c3541ac080e48ee8de79e80c32d9</strong>?v=3347c3541ac0808bb768000ca737f8d5</code>
+            <small class="field-help">Use <code>3347c3541ac080e48ee8de79e80c32d9</code> as the Database ID. Do not use the value after <code>?v=</code>.</small>
+          </div>
           <label class="field">
             <span>Integration token</span>
             <small class="field-help">This is secret. It is hidden like a password because it works as a credential.</small>
@@ -74,6 +79,11 @@
             <a href="https://console.cloud.google.com/apis/library/tasks.googleapis.com" target="_blank" rel="noreferrer">Enable Google Tasks API</a>
             <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noreferrer">Open Google Cloud credentials</a>
             <a href="https://developers.google.com/workspace/guides/create-credentials" target="_blank" rel="noreferrer">Official Google guide</a>
+          </div>
+          <div class="redirect-box">
+            <span class="redirect-label">Important</span>
+            <small class="field-help">Google OAuth is not enough by itself. You must also enable the Google Tasks API in the same Google Cloud project used by your OAuth client.</small>
+            <a href="https://console.developers.google.com/apis/api/tasks.googleapis.com/overview?project=890191247794" target="_blank" rel="noreferrer">Open Google Tasks API for project 890191247794</a>
           </div>
           <label class="field">
             <span>OAuth Client ID</span>
@@ -124,10 +134,19 @@
         </section>
 
         <section class="card section-card full-width">
-          <div class="button-row">
-            <button type="submit" class="primary">Save settings</button>
+          <div class="action-check-row">
+            <div class="button-stack">
+              <div class="button-row">
+                <button type="submit" class="primary">Save settings</button>
+                <button id="testConnection" type="button" class="secondary">Test connection</button>
+              </div>
+              <div id="settingsMessage" class="message" aria-live="polite"></div>
+            </div>
+            <div class="message-box">
+              <strong class="message-box-title">Connection messages</strong>
+              <div id="inlineConnectionMessages" class="message-box-body">No connection test has been run yet.</div>
+            </div>
           </div>
-          <div id="settingsMessage" class="message" aria-live="polite"></div>
         </section>
 
         <section class="card section-card full-width">

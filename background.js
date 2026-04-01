@@ -351,13 +351,15 @@ async function getStatus() {
 }
 
 async function validateConnections() {
-  const [config, googleToken] = await Promise.all([
+  const [config, googleTokenResult] = await Promise.all([
     getStoredConfig(),
-    getGoogleToken(false).catch(() => null)
+    getGoogleToken(false)
+      .then((token) => ({ token, error: "" }))
+      .catch((error) => ({ token: null, error: error.message }))
   ]);
 
   const notion = await validateNotionConnection(config.notion);
-  const google = await validateGoogleConnection(config.google, googleToken);
+  const google = await validateGoogleConnection(config.google, googleTokenResult.token, googleTokenResult.error);
 
   return {
     checkedAt: new Date().toISOString(),
@@ -640,7 +642,7 @@ async function listGoogleTasks() {
   return (data.items || []).map((item) => normalizeGoogleTask(item));
 }
 
-async function validateGoogleConnection(googleConfig, googleToken) {
+async function validateGoogleConnection(googleConfig, googleToken, tokenError = "") {
   if (!googleConfig.clientId) {
     return {
       ok: false,
@@ -664,7 +666,7 @@ async function validateGoogleConnection(googleConfig, googleToken) {
       ok: false,
       status: "needs_auth",
       label: "Authorization required",
-      detail: "The Client ID is saved, but Google authorization is still required."
+      detail: tokenError || "The Google credentials are saved, but authorization is still required."
     };
   }
 

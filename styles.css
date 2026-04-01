@@ -555,6 +555,50 @@ button:disabled {
   margin-bottom: 6px;
 }
 
+.action-check-row {
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.button-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.message-box {
+  min-height: 110px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.message-box.healthy,
+.info-tile.healthy {
+  background: rgba(126, 211, 154, 0.22);
+  border-color: rgba(72, 143, 95, 0.36);
+}
+
+.message-box.unhealthy,
+.info-tile.unhealthy {
+  background: rgba(255, 255, 255, 0.62);
+  border-color: var(--line);
+}
+
+.message-box-title {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.message-box-body {
+  white-space: pre-wrap;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
 .status-text,
 .inline-status,
 .message {
@@ -763,6 +807,12 @@ button:disabled {
 
   h1 {
     font-size: 24px;
+  }
+}
+
+@media (max-width: 900px) {
+  .action-check-row {
+    grid-template-columns: 1fr;
   }
 }
 
